@@ -4,6 +4,9 @@ class Config(object):
     MONGO_URI = 'mongodb://localhost/'
     DB = "flaskr"
     COLLECTION = "flaskr"
+    USERNAME = "aravind"
+    PASSWORD = "SEGATE"
+    SECRET_KEY = "this is secret"
 
 
 class ProductionConfig(Config):

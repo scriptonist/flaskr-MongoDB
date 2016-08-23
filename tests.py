@@ -7,7 +7,7 @@ class BasicTestCase(unittest.TestCase):
     def test_website_online(self):
         tester = app.test_client(self)
         response = tester.get("/", content_type='html/text')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
 
     def test_db_exists(self):
         with app.app_context():
@@ -45,30 +45,26 @@ class FlaskrTestCase(unittest.TestCase):
     def test_empty_db(self):
         """ ensure that the database is blank """
         rv = self.app.get("/")
-        self.assertIn("No entries So far", rv.data.decode("utf-8"))
+        self.assertIn("No Entries Yet. Add some !", rv.data.decode("utf-8"))
 
     def test_login_logout(self):
         """ Test Login and Logout Using Helper Function """
         rv = self.login(app.config['USERNAME'],
-                        self.login(app.config['PASSWORD'])
-                        )
-        self.assertIn("You Were Logged in", rv.data.decode("utf-8"))
+                        app.config['PASSWORD'])
+        self.assertIn("You Were Logged In !", rv.data.decode("utf-8"))
         rv = self.logout()
-        self.assetIn("You Were Logged Out", rv.data.decode('utf-8'))
+        self.assertIn("You Were Logged Out", rv.data.decode('utf-8'))
         rv = self.login(app.config['USERNAME'] + 'x',
-                        self.login(app.config['PASSWORD'])
-                        )
+                        app.config['PASSWORD'])
         self.assertIn("Invalid Username", rv.data.decode('utf-8'))
         rv = self.login(app.config['USERNAME'],
-                        self.login(app.config['PASSWORD'] + 'x')
-                        )
+                        app.config['PASSWORD'] + 'x')
         self.assertIn("Invalid Password", rv.data.decode('utf-8'))
 
     def test_messages(self):
         """ Ensure that the user can post messages """
         self.login(app.config['USERNAME'],
-                   self.login(app.config['PASSWORD'])
-                   )
+                   app.config['PASSWORD'])
         rv = self.app.post("/add", data=dict(
             title='<Hello>',
             text='<strong>HTML</strong> allowed here'
